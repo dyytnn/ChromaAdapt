@@ -36,6 +36,21 @@ class YoloOverlapTouchPrediction:
     masks: np.ndarray  # [K, H, W] bool, H/W = original crop size
 
 
+def derive_pairwise_overlap(prediction: YoloOverlapTouchPrediction) -> np.ndarray | None:
+    """Derive an overlap mask from exactly two detected instances.
+
+    This model has no dedicated overlap head (unlike the dual-head MASS-Net
+    models in ``adapters.py``) -- it only predicts per-chromosome instance
+    masks. When exactly two instances are detected, their pixel-wise
+    intersection is a reasonable proxy for the overlap region. Returns
+    ``None`` when the instance count is not exactly two (0, 1, or 3+ make
+    "the overlap between the pair" ill-defined).
+    """
+    if prediction.masks.shape[0] != 2:
+        return None
+    return prediction.masks[0] & prediction.masks[1]
+
+
 class YoloOverlapTouchOnnxAdapter:
     """Load and run the released YOLO26n-seg overlap/touch ONNX graph on CPU.
 
@@ -191,4 +206,4 @@ class YoloOverlapTouchOnnxAdapter:
         return image, self.predict_image(image)
 
 
-__all__ = ["YoloOverlapTouchOnnxAdapter", "YoloOverlapTouchPrediction"]
+__all__ = ["YoloOverlapTouchOnnxAdapter", "YoloOverlapTouchPrediction", "derive_pairwise_overlap"]
