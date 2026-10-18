@@ -1,0 +1,44 @@
+DOMAIN_CLASSIFIER:
+  Linear_1:
+    pytorch_Linear:
+      in_features: 576
+      out_features: 256
+      bias: false
+
+  Normalization_1:
+    BN1d:
+      num_features: 256
+
+  Activation_1:
+    LeakyReLU:
+      negative_slope: 0.01
+      inplace: false
+
+  Dropout_1:
+    Dropout:
+      p: 0.3
+
+  Linear_2:
+    pytorch_Linear:
+      in_features: 256
+      out_features: 128
+      bias: false
+
+  Normalization_2:
+    BN1d:
+      num_features: 128
+
+  Activation_2:
+    LeakyReLU:
+      negative_slope: 0.01
+      inplace: false
+
+  Dropout_2:
+    Dropout:
+      p: 0.2
+
+  Linear_3:
+    pytorch_Linear:
+      in_features: 128
+      out_features: 1
+      bias: true

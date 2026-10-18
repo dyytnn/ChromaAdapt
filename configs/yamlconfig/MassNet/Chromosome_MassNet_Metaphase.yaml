@@ -1,0 +1,356 @@
+BACKBONE:
+  Input_convolution:
+    Conv_Block:
+      Convolution:
+        in_channels: 1
+        out_channels: 16
+        stride: 2
+        dilation: 1
+        kernel_size: 3
+        padding: 1
+
+  Scale_8_Block:
+    Conv_Block:
+      Convolution:
+        in_channels: 16
+        out_channels: 32
+        stride: 8
+        dilation: 1
+        kernel_size: 3
+    Depthwise_Separable_Conv_Blocks_0:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 32
+        nout: 32
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_Blocks_1:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 32
+        nout: 32
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_Blocks_2:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 32
+        nout: 32
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_Blocks_3:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 32
+        nout: 32
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_Blocks_4:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 32
+        nout: 32
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_Blocks_5:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 32
+        nout: 32
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_Blocks_6:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 32
+        nout: 32
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_Blocks_7:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 32
+        nout: 32
+        stride: 1
+        dilation: 1
+        padding: 1
+    Transpose_Conv_Blocks_0:
+      Transpose_Conv_Blocks:
+        in_chans: 32
+        out_chans: 32
+        kernel_size: 3
+        stride: 2
+        padding: 1
+        dilation: 1
+        output_padding: 1
+        activation: "Swish"
+    Transpose_Conv_Blocks_1:
+      Transpose_Conv_Blocks:
+        in_chans: 32
+        out_chans: 32
+        kernel_size: 3
+        stride: 2
+        padding: 1
+        dilation: 1
+        output_padding: 1
+        activation: "Swish"
+    Transpose_Conv_Blocks_2:
+      Transpose_Conv_Blocks:
+        in_chans: 32
+        out_chans: 32
+        kernel_size: 3
+        stride: 2
+        padding: 1
+        dilation: 1
+        output_padding: 1
+        activation: "Swish"
+
+  Scale_4_Block:
+    Conv_Block_0:
+      Conv_Block:
+        in_chans: 16
+        out_chans: 32
+        kernel_size: 3
+        stride: 4
+        dilation: 1
+        activation: "ReLU"
+    Conv_Block_1:
+      Conv_Block:
+        in_chans: 32
+        out_chans: 64
+        kernel_size: 3
+        stride: 1
+        dilation: 1
+        padding: 1
+        activation: "ReLU"
+    Conv_Block_2:
+      Conv_Block:
+        in_chans: 64
+        out_chans: 128
+        kernel_size: 3
+        stride: 1
+        dilation: 1
+        padding: 1
+        activation: "ReLU"
+    Depthwise_Separable_Conv_Blocks_0:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 128
+        nout: 128
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_Blocks_1:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 128
+        nout: 128
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_Blocks_2:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 128
+        nout: 64
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_Blocks_3:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 64
+        nout: 64
+        stride: 1
+        dilation: 1
+        padding: 1
+    Transpose_Conv_Block_0:
+      Transpose_Conv_Blocks:
+        in_chans: 64
+        out_chans: 128
+        kernel_size: 3
+        stride: 2
+        dilation: 1
+        padding: 1
+        output_padding: 1
+        activation: "ReLU"
+    Transpose_Conv_Block_1:
+      Transpose_Conv_Blocks:
+          in_chans: 128
+          out_chans: 64
+          kernel_size: 3
+          stride: 2
+          dilation: 1
+          padding: 1
+          output_padding: 1
+          activation: "ReLU"
+
+  Scale_2_Block:
+    Conv_Block_0:
+      Conv_Block:
+        in_chans: 16
+        out_chans: 32
+        kernel_size: 3
+        stride: 2
+        dilation: 2
+        padding: 2
+        activation: "ReLU"
+    Conv_Block_1:
+      Conv_Block:
+        in_chans: 32
+        out_chans: 64
+        kernel_size: 3
+        stride: 1
+        dilation: 2
+        padding: 2
+        activation: "ReLU"
+    Conv_Block_2:
+      Conv_Block:
+        in_chans: 64
+        out_chans: 64
+        kernel_size: 3
+        stride: 1
+        dilation: 2
+        padding: 2
+        activation: "ReLU"
+    MaxPool2d_1:
+      MaxPool2d:
+        kernel_size: 3
+        stride: 2
+        padding: 1
+    Conv_Block_3:
+      Conv_Block:
+        in_chans: 64
+        out_chans: 128
+        kernel_size: 3
+        stride: 1
+        dilation: 2
+        padding: 2
+        activation: "ReLU"
+    Conv_Block_4:
+      Conv_Block:
+        in_chans: 128
+        out_chans: 256
+        kernel_size: 3
+        stride: 1
+        dilation: 2
+        padding: 2
+        activation: "ReLU"
+    Depthwise_Separable_Conv_1:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 256
+        nout: 256
+        kernel_size: 3
+        stride: 1
+        dilation: 1
+        padding: 1
+    Depthwise_Separable_Conv_2:
+      Depthwise_Separable_Conv_Blocks:
+        nin: 256
+        nout: 256
+        kernel_size: 3
+        stride: 1
+        dilation: 1
+        padding: 1
+    Transpose_Conv_Block_1:
+      Transpose_Conv_Blocks:
+        in_chans: 256
+        out_chans: 128
+        kernel_size: 3
+        stride: 2
+        dilation: 1
+        padding: 1
+        output_padding: 1
+        activation: "ReLU"
+    Transpose_Conv_Block_2:
+      Transpose_Conv_Blocks:
+        in_chans: 128
+        out_chans: 64
+        kernel_size: 3
+        stride: 2
+        dilation: 1
+        padding: 1
+        output_padding: 1
+        activation: "ReLU"
+
+NECK:
+  Conv_Block_0:
+    Conv_Block:
+      in_chans: 16
+      out_chans: 32
+      kernel_size: 3
+      stride: 1
+      dilation: 1
+      padding: 1
+      activation: "ReLU"
+  Conv_Block_1:
+    Conv_Block:
+      in_chans: 32
+      out_chans: 64
+      kernel_size: 3
+      stride: 1
+      dilation: 1
+      padding: 1
+      activation: "ReLU"
+  Conv_Block_2:
+    Conv_Block:
+      in_chans: 64
+      out_chans: 64
+      kernel_size: 3
+      stride: 1
+      dilation: 1
+      padding: 1
+      activation: "ReLU"
+  Conv_Block_3:
+    Conv_Block:
+      in_chans: 64
+      out_chans: 128
+      kernel_size: 3
+      stride: 1
+      dilation: 1
+      padding: 1
+      activation: "ReLU"
+
+HEAD:
+  Conv_Block_0:
+    Conv_Block:
+      in_chans: 288
+      out_chans: 256
+      kernel_size: 3
+      stride: 1
+      dilation: 1
+      padding: 1
+      activation: "LeakyReLU"
+  Conv_Block_1:
+    Conv_Block:
+      in_chans: 256
+      out_chans: 128
+      kernel_size: 3
+      stride: 1
+      dilation: 1
+      padding: 1
+      activation: "LeakyReLU"
+  Conv_Block_2:
+    Conv_Block:
+      in_chans: 128
+      out_chans: 64
+      kernel_size: 3
+      stride: 1
+      dilation: 1
+      padding: 1
+      activation: "LeakyReLU"
+  Transpose_Conv_Block_2:
+    Transpose_Conv_Blocks:
+      in_chans: 64
+      out_chans: 32
+      kernel_size: 3
+      stride: 2
+      dilation: 1
+      padding: 1
+      output_padding: 1
+      activation: "LeakyReLU"
+
+  ChromosomeSegmentation:
+    Conv_Block:
+      in_chans: 32
+      out_chans: 47
+      kernel_size: 3
+      stride: 1
+      dilation: 1
+      padding: 1
+      activation: null
