@@ -60,6 +60,7 @@ figures/
 paper_figures/
 notebooks/
 *.ipynb
+!onnx_models/demo_all_models.ipynb
 utils/visualizer.py
 .vscode/
 .agents/
