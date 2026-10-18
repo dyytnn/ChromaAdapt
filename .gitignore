@@ -73,7 +73,12 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 .coverage
+.coverage.*
 htmlcov/
+.tox/
+.nox/
+.cache/
+.hypothesis/
 
 # Virtual environments and local configuration
 .env
@@ -82,10 +87,27 @@ htmlcov/
 .venv/
 venv/
 env/
+ENV/
+env.bak/
+venv.bak/
 
 # Packaging and OS artifacts
 build/
 dist/
+target/
 *.egg-info/
+*.egg
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+wheels/
+*.manifest
+*.spec
+*.so
+.Python
+MANIFEST
 .DS_Store
 Thumbs.db
