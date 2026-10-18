@@ -97,6 +97,26 @@ disk and returns `(original_bgr_image, prediction)`.
 Use `--color-order rgb` only when deliberately testing RGB input. The default
 `bgr` setting matches the real-data evaluation loader used for the paper.
 
+### `yolo_overlap_touch_adapter.py`
+
+```python
+from onnx_models.yolo_overlap_touch_adapter import YoloOverlapTouchOnnxAdapter
+import cv2
+
+adapter = YoloOverlapTouchOnnxAdapter()  # CPUExecutionProvider; uses the bundled ONNX
+image = cv2.imread("pair_crop.jpg")  # OpenCV BGR
+prediction = adapter.predict_image(image)
+print(prediction.boxes_xyxy)  # [K, 4], original image coordinates
+print(prediction.scores)      # [K]
+print(prediction.masks.shape) # [K, H, W], bool
+
+# or, from a path on disk:
+image, prediction = adapter.predict_path("pair_crop.jpg")
+```
+
+`model_path=...` selects a different ONNX file; `conf_threshold`,
+`iou_threshold`, and `imgsz` are also constructor arguments.
+
 ## Integrity and export validation
 
 Each checkpoint was loaded with strict parameter-key matching. Every exported

@@ -26,6 +26,7 @@ weights/
 !onnx_models/massnet_sure.onnx
 !onnx_models/massnet_susy_to_sure.onnx
 !onnx_models/massnet_susy_to_sedann.onnx
+!onnx_models/yolo26n_seg_overlap_touch_core2.onnx
 
 # Data files (the repository's data/ directory contains Python loaders only)
 *.bmp
