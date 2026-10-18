@@ -9,7 +9,11 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-import onnxruntime as ort
+
+try:  # Support both ``python infer_onnx.py`` and package imports.
+    from .adapters import OnnxMassNetAdapter
+except ImportError:
+    from adapters import OnnxMassNetAdapter
 
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp"}
@@ -100,13 +104,13 @@ def save_outputs(
 
 
 def benchmark(
-    session: ort.InferenceSession, tensor: np.ndarray, runs: int
+    adapter: OnnxMassNetAdapter, tensor: np.ndarray, runs: int
 ) -> None:
     for _ in range(3):
-        session.run(None, {"input": tensor})
+        adapter.infer_tensor(tensor)
     started = time.perf_counter()
     for _ in range(runs):
-        session.run(None, {"input": tensor})
+        adapter.infer_tensor(tensor)
     elapsed_ms = (time.perf_counter() - started) * 1000.0 / runs
     print(f"CPU benchmark: {elapsed_ms:.2f} ms/image ({runs} measured runs)")
 
@@ -156,15 +160,11 @@ def main() -> None:
     if args.benchmark_runs < 0:
         raise ValueError("--benchmark-runs cannot be negative")
 
-    options = ort.SessionOptions()
-    options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
-    session = ort.InferenceSession(
-        str(args.model), sess_options=options, providers=["CPUExecutionProvider"]
+    adapter = OnnxMassNetAdapter(
+        args.model,
+        color_order=args.color_order,
+        overlap_threshold=args.overlap_threshold,
     )
-    output_names = [output.name for output in session.get_outputs()]
-    expected_outputs = ["chromosome_logits", "overlap_logits"]
-    if output_names != expected_outputs:
-        raise RuntimeError(f"Unexpected ONNX outputs: {output_names}")
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     first_tensor = None
@@ -175,18 +175,20 @@ def main() -> None:
 
     for image_path, generated_image in samples:
         if generated_image is None:
-            original_bgr, tensor = load_and_preprocess(image_path, args.color_order)
+            original_bgr = cv2.imread(str(image_path), cv2.IMREAD_COLOR)
+            if original_bgr is None:
+                raise ValueError(f"OpenCV could not decode: {image_path}")
+            tensor = adapter.preprocess_image(original_bgr)
         else:
-            original_bgr, tensor = preprocess_image(generated_image, args.color_order)
-        chromosome_logits, overlap_logits = session.run(
-            expected_outputs, {"input": tensor}
-        )
+            original_bgr = generated_image
+            tensor = adapter.preprocess_image(original_bgr)
+        prediction = adapter.infer_tensor(tensor)
         paths = save_outputs(
             args.output_dir,
             image_path,
             original_bgr,
-            chromosome_logits,
-            overlap_logits,
+            prediction.chromosome_logits,
+            prediction.overlap_logits,
             args.overlap_threshold,
         )
         print(f"{image_path.name}: saved {', '.join(path.name for path in paths)}")
@@ -194,7 +196,7 @@ def main() -> None:
             first_tensor = tensor
 
     if args.benchmark_runs:
-        benchmark(session, first_tensor, args.benchmark_runs)
+        benchmark(adapter, first_tensor, args.benchmark_runs)
 
 
 if __name__ == "__main__":

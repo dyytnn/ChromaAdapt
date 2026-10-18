@@ -70,6 +70,30 @@ The two foreground chromosome IDs identify the two instances in a pair; their
 numeric order is not biologically meaningful. The model expects cropped
 touching/overlapping chromosome pairs, not an uncropped full metaphase image.
 
+## Python adapters
+
+`adapters.py` exposes one adapter class per released regime. Each class loads
+its matching ONNX file by default, and all return the same `MassNetPrediction`
+with raw logits plus decoded chromosome and overlap masks:
+
+```python
+from onnx_models.adapters import SuSyToSuReOnnxAdapter
+import cv2
+
+adapter = SuSyToSuReOnnxAdapter()  # CPUExecutionProvider; uses the bundled ONNX
+image = cv2.imread("pair_crop.png")  # OpenCV BGR, same preprocessing as CLI
+prediction = adapter.predict_image(image)
+print(prediction.chromosome_labels.shape)  # [1, H, W], values 0/1/2
+print(prediction.overlap_masks.shape)      # [1, H, W], values 0/1
+```
+
+The other classes are `SuSyOnnxAdapter`, `SuReOnnxAdapter`, and
+`SuSyToSeDANNOnnxAdapter`. Alternatively, choose a bundled model dynamically:
+`OnnxMassNetAdapter.from_model("susy_to_sure")`. To use an ONNX file at a
+custom location, pass `model_path=...` to any adapter. `infer_tensor()` accepts
+already-normalized float32 NCHW batches; `predict_path()` loads one image from
+disk and returns `(original_bgr_image, prediction)`.
+
 Use `--color-order rgb` only when deliberately testing RGB input. The default
 `bgr` setting matches the real-data evaluation loader used for the paper.
 
