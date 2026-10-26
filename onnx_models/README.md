@@ -117,6 +117,38 @@ image, prediction = adapter.predict_path("pair_crop.jpg")
 `model_path=...` selects a different ONNX file; `conf_threshold`,
 `iou_threshold`, and `imgsz` are also constructor arguments.
 
+### `maskrcnn_t407_adapter.py`
+
+Full-metaphase Mask R-CNN (torchvision ResNet-50 FPN, 2 classes) from the T4-07
+real fine-tune. Unlike the pair-crop models above it takes a **whole metaphase
+image** of any size and returns one instance per chromosome (about 46); resize,
+RPN, ROI heads and mask pasting are inside `maskrcnn_t407_real.onnx` (opset 17,
+176 MB).
+
+| Name | Type and shape | Meaning |
+|---|---|---|
+| `image` | `float32 [3, H, W]` | RGB in `[0, 1]`, dynamic H and W |
+| `boxes` | `float32 [K, 4]` | xyxy, input-image pixels |
+| `labels` | `int64 [K]` | always 1 (chromosome) |
+| `scores` | `float32 [K]` | confidence |
+| `masks` | `float32 [K, 1, H, W]` | per-instance probability in the input frame |
+
+```python
+from onnx_models.maskrcnn_t407_adapter import MaskRcnnT407OnnxAdapter
+
+adapter = MaskRcnnT407OnnxAdapter()  # score_threshold=0.5, mask_threshold=0.5
+image, prediction = adapter.predict_path("metaphase.jpg")  # OpenCV BGR
+print(prediction.boxes_xyxy.shape, prediction.scores.shape)  # [K, 4], [K]
+print(prediction.masks.shape)  # [K, H, W], bool
+```
+
+Regenerate with `python utils/export_maskrcnn_onnx.py --checkpoint /path/to/best.pt`
+(add `--compare-image` for a PyTorch-vs-ONNX check). Export validation: on one
+metaphase image PyTorch and ONNX Runtime agreed on all 47 detections (max score
+difference 4.4e-06, box 2.7e-04 px, mask probability 4.5e-05); on 100 random
+platform images the ONNX detection count matched PyTorch on all 100. CPU
+inference is about 1 s per image.
+
 ## Integrity and export validation
 
 Each checkpoint was loaded with strict parameter-key matching. Every exported
