@@ -123,7 +123,7 @@ Full-metaphase Mask R-CNN (torchvision ResNet-50 FPN, 2 classes) from the T4-07
 real fine-tune. Unlike the pair-crop models above it takes a **whole metaphase
 image** of any size and returns one instance per chromosome (about 46); resize,
 RPN, ROI heads and mask pasting are inside `maskrcnn_t407_real.onnx` (opset 17,
-176 MB).
+176 MB, stored with Git LFS: run `git lfs install` before cloning or `git lfs pull` afterwards).
 
 | Name | Type and shape | Meaning |
 |---|---|---|
